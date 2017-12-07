@@ -1,6 +1,7 @@
-const { expect } = require('chai');
+/* eslint-disable no-unused-expressions */
 
-const express = require('../../lib/express');
+import { expect } from 'chai';
+import express from '../../src/express';
 
 describe('express middleware', () => {
   it('is CommonJS compatible', () => {

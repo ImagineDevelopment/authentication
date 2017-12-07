@@ -1,5 +1,5 @@
-const initialize = require('../../lib/passport/initialize');
-const { expect } = require('chai');
+import initialize from '../../src/passport/initialize';
+import { expect } from 'chai';
 
 describe('passport:initialize', () => {
   it('it returns a function', () => {

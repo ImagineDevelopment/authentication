@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-expressions */
-const merge = require('lodash.merge');
-const io = require('socket.io-client');
-const createApplication = require('../fixtures/server');
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-const clone = require('lodash.clone');
-const { expect } = chai;
+
+import merge from 'lodash.merge';
+import io from 'socket.io-client';
+import createApplication from '../fixtures/server';
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import clone from 'lodash.clone';
 
 chai.use(sinonChai);
 
@@ -99,17 +99,6 @@ describe('Socket.io authentication', function () {
         });
 
         it('sets the user on the socket', done => {
-          socket.emit('authenticate', data, (error, response) => {
-            expect(error).to.not.equal(undefined);
-            expect(response.accessToken).to.exist;
-            expect(serverSocket.feathers.user).to.not.equal(undefined);
-            done();
-          });
-        });
-
-        it('does never publish events from the authentication service', done => {
-          socket.once('authentication created', () => done(new Error('Should not get here')));
-
           socket.emit('authenticate', data, (error, response) => {
             expect(error).to.not.equal(undefined);
             expect(response.accessToken).to.exist;

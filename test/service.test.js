@@ -1,13 +1,11 @@
 /* eslint-disable no-unused-expressions */
-const feathers = require('@feathersjs/feathers');
-const expressify = require('@feathersjs/express');
-const authentication = require('../lib');
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
 
-const { expect } = chai;
-const { express } = authentication;
+import feathers from 'feathers';
+import hooks from 'feathers-hooks';
+import authentication, { express } from '../src';
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 chai.use(sinonChai);
 
@@ -20,7 +18,8 @@ describe('/authentication service', () => {
     sinon.spy(express, 'successRedirect');
     sinon.spy(express, 'failureRedirect');
 
-    app = expressify(feathers())
+    app = feathers()
+      .configure(hooks())
       .configure(authentication({ secret: 'supersecret' }));
   });
 
@@ -33,7 +32,7 @@ describe('/authentication service', () => {
 
   it('throws an error when path option is missing', () => {
     expect(() => {
-      express(feathers()).configure(authentication({
+      feathers().configure(authentication({
         secret: 'dummy',
         path: null
       }));

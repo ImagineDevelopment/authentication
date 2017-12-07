@@ -1,15 +1,15 @@
-const path = require('path');
-const feathers = require('@feathersjs/feathers');
-const express = require('@feathersjs/express');
-const rest = require('@feathersjs/express/rest');
-const socketio = require('@feathersjs/socketio');
-const primus = require('@feathersjs/primus');
-const memory = require('feathers-memory');
-const bodyParser = require('body-parser');
-const errorHandler = require('@feathersjs/errors/handler');
-const local = require('@feathersjs/authentication-local');
-const jwt = require('@feathersjs/authentication-jwt');
-const auth = require('../../lib/index');
+import path from 'path';
+import feathers from 'feathers';
+import rest from 'feathers-rest';
+import socketio from 'feathers-socketio';
+import primus from 'feathers-primus';
+import hooks from 'feathers-hooks';
+import memory from 'feathers-memory';
+import bodyParser from 'body-parser';
+import errorHandler from 'feathers-errors/handler';
+import local from 'feathers-authentication-local';
+import jwt from 'feathers-authentication-jwt';
+import auth from '../../lib/index';
 
 const User = {
   email: 'admin@feathersjs.com',
@@ -17,12 +17,8 @@ const User = {
   permissions: ['*']
 };
 
-process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise ', p, ' reason: ', reason);
-});
-
-module.exports = function (settings, socketProvider) {
-  const app = express(feathers());
+export default function (settings, socketProvider) {
+  const app = feathers();
 
   let _provider;
   if (socketProvider === 'socketio') {
@@ -47,6 +43,7 @@ module.exports = function (settings, socketProvider) {
 
   app.configure(rest())
     .configure(_provider)
+    .configure(hooks())
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
     .configure(auth(settings))
@@ -57,7 +54,7 @@ module.exports = function (settings, socketProvider) {
     }))
     .configure(jwt())
     .use('/users', memory())
-    .use('/', express.static(path.resolve(__dirname, '/public')));
+    .use('/', feathers.static(path.resolve(__dirname, '/public')));
 
   app.service('authentication').hooks({
     before: {
@@ -108,8 +105,5 @@ module.exports = function (settings, socketProvider) {
 
   app.use(errorHandler());
 
-  app.on('connection', connection => app.channel('everybody').join(connection));
-  app.publish(() => app.channel('everybody'));
-
   return app;
-};
+}

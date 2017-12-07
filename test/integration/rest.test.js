@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
-const merge = require('lodash.merge');
-const request = require('superagent');
-const createApplication = require('../fixtures/server');
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-const { expect } = chai;
+
+import merge from 'lodash.merge';
+import request from 'superagent';
+import createApplication from '../fixtures/server';
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 chai.use(sinonChai);
 

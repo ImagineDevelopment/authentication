@@ -1,9 +1,8 @@
-const jwt = require('jsonwebtoken');
-const chai = require('chai');
-const chaiUuid = require('chai-uuid');
-const { createJWT, verifyJWT } = require('../lib/utils');
-const getOptions = require('../lib/options');
-const { expect } = require('chai');
+import jwt from 'jsonwebtoken';
+import chai, { expect } from 'chai';
+import chaiUuid from 'chai-uuid';
+import { createJWT, verifyJWT } from '../src/utils';
+import getOptions from '../src/options';
 
 chai.use(chaiUuid);
 
@@ -61,17 +60,6 @@ describe('utils', () => {
 
       it('has a uuidv4 jwtid', () => {
         expect(decoded.jti).to.be.a.uuid('v4');
-      });
-    });
-
-    it('does not error if payload has jti property', () => {
-      return createJWT({
-        id: 1,
-        jti: 'test'
-      }, options).then(t => {
-        const decoded = jwt.decode(t);
-
-        expect(decoded.jti).to.equal('test');
       });
     });
 

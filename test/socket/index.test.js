@@ -1,5 +1,5 @@
-const socket = require('../../lib/socket');
-const { expect } = require('chai');
+import socket from '../../src/socket';
+import { expect } from 'chai';
 
 describe('Feathers Socket Handlers', () => {
   it('is CommonJS compatible', () => {
