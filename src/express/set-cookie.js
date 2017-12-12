@@ -1,45 +1,26 @@
-'use strict';
+import Debug from 'debug';
+import omit from 'lodash.omit';
+import ms from 'ms';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = setCookie;
+const debug = Debug('feathers-authentication:middleware:set-cookie');
 
-var _debug = require('debug');
-
-var _debug2 = _interopRequireDefault(_debug);
-
-var _lodash = require('lodash.omit');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _ms = require('ms');
-
-var _ms2 = _interopRequireDefault(_ms);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var debug = (0, _debug2.default)('feathers-authentication:middleware:set-cookie');
-
-function setCookie() {
-  var authOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+export default function setCookie (authOptions = {}) {
   debug('Registering setCookie middleware');
 
-  function makeExpiry(timeframe) {
-    return new Date(Date.now() + (0, _ms2.default)(timeframe));
+  function makeExpiry (timeframe) {
+    return new Date(Date.now() + ms(timeframe));
   }
 
   return function (req, res, next) {
-    var app = req.app;
+    const app = req.app;
     // Prevent mutating authOptions object
-    var options = Object.assign({}, authOptions.cookie);
+    const options = Object.assign({}, authOptions.cookie);
 
     debug('Running setCookie middleware with options:', options);
 
     // If cookies are enabled then set it with its options.
     if (options.enabled && options.name) {
-      var cookie = options.name;
+      const cookie = options.name;
 
       // Don't set the cookie if this was called after removing the token.
       if (res.hook && res.hook.method === 'remove') {
@@ -48,7 +29,7 @@ function setCookie() {
       // Only set the cookie if we have a JWT access token.
       if (res.data && res.data.accessToken) {
         // Clear out any old cookie since we are creating a new one
-        debug('Clearing old \'' + cookie + '\' cookie');
+        debug(`Clearing old '${cookie}' cookie`);
         res.clearCookie(cookie);
 
         // Check HTTPS and cookie status in production.
@@ -56,7 +37,7 @@ function setCookie() {
           console.warn('WARN: Request isn\'t served through HTTPS: JWT in the cookie is exposed.');
           console.info('If you are behind a proxy (e.g. NGINX) you can:');
           console.info('- trust it: http://expressjs.com/en/guide/behind-proxies.html');
-          console.info('- set cookie[\'' + cookie + '\'].secure false');
+          console.info(`- set cookie['${cookie}'].secure false`);
         }
 
         // If a custom expiry wasn't passed then set the expiration
@@ -76,9 +57,9 @@ function setCookie() {
 
         // remove some of our options that don't apply to express cookie creation
         // as well as the maxAge because we have set an explicit expiry.
-        var cookieOptions = (0, _lodash2.default)(options, 'name', 'enabled', 'maxAge');
+        const cookieOptions = omit(options, 'name', 'enabled', 'maxAge');
 
-        debug('Setting \'' + cookie + '\' cookie with options', cookieOptions);
+        debug(`Setting '${cookie}' cookie with options`, cookieOptions);
         res.cookie(cookie, res.data.accessToken, cookieOptions);
       }
     }
@@ -86,4 +67,3 @@ function setCookie() {
     next();
   };
 }
-module.exports = exports['default'];

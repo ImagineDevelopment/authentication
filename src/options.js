@@ -1,24 +1,6 @@
-'use strict';
+import merge from 'lodash.merge';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports.default = function () {
-  for (var _len = arguments.length, otherOptions = Array(_len), _key = 0; _key < _len; _key++) {
-    otherOptions[_key] = arguments[_key];
-  }
-
-  return _lodash2.default.apply(undefined, [{}, defaults].concat(otherOptions));
-};
-
-var _lodash = require('lodash.merge');
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var defaults = {
+const defaults = {
   path: '/authentication',
   header: 'Authorization',
   entity: 'user',
@@ -41,4 +23,6 @@ var defaults = {
   }
 };
 
-module.exports = exports['default'];
+export default function (...otherOptions) {
+  return merge({}, defaults, ...otherOptions);
+}

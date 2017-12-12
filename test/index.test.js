@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import 'babel-polyfill';
 
 import feathers from 'feathers';
 import passport from 'passport';

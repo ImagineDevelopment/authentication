@@ -1,10 +1,7 @@
 import jwt from 'jsonwebtoken';
-import chai, { expect } from 'chai';
-import chaiUuid from 'chai-uuid';
+import { expect } from 'chai';
 import { createJWT, verifyJWT } from '../src/utils';
 import getOptions from '../src/options';
-
-chai.use(chaiUuid);
 
 describe('utils', () => {
   let options;
@@ -57,10 +54,6 @@ describe('utils', () => {
       it('has the correct issuer', () => {
         expect(decoded.iss).to.equal(options.jwt.issuer);
       });
-
-      it('has a uuidv4 jwtid', () => {
-        expect(decoded.jti).to.be.a.uuid('v4');
-      });
     });
 
     describe('when passing custom options', () => {
@@ -73,7 +66,6 @@ describe('utils', () => {
         options.jwt.audience = 'org';
         options.jwt.expiresIn = '1y'; // expires in 1 year
         options.jwt.notBefore = '1h'; // token is valid 1 hour from now
-        options.jwt.jwtid = '1234';
 
         return createJWT(payload, options).then(t => {
           token = t;
@@ -99,10 +91,6 @@ describe('utils', () => {
 
       it('has the correct issuer', () => {
         expect(decoded.iss).to.equal('custom');
-      });
-
-      it('has the correct jwtid', () => {
-        expect(decoded.jti).to.equal('1234');
       });
     });
   });
