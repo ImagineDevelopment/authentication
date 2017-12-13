@@ -29,7 +29,7 @@ module.exports = (app) => (entity) => {
 
       if (`${entityId}` === `${socketEntityId}`) {
         // Need to assign because of external references
-        // Object.assign(socketEntity, entity);
+        Object.assign(socketEntity, entity);
 
         // Delete any removed entity properties
         const entityProps = new Set(Object.keys(entity));
